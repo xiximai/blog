@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!-- mysql jar 文件位置 -->
+    <classPathEntry
+            location="E:\my-local-maven-repository\mysql\mysql-connector-java\5.1.37\mysql-connector-java-5.1.37.jar"/>
+    <context id="BlogTables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+            <!-- 是否去除所有自动生成的文件的时间戳，默认为false -->
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/mybatisblog?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC"
+                        userId="root"
+                        password="888888">
+        </jdbcConnection>
+        <!-- targetPackage:包名称(自定义)  targetProject：项目路径(自定义)   -->
+        <!--定义model的包名称-->
+        <javaModelGenerator targetPackage="com.lrj.myblogmybatis.pojo" targetProject="src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 从数据库返回的值被清理前后的空格  -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 配置生成相应的实体Mapper.xml，对于Mapper3.X我们需要把type="XMLMAPPER" -->
+        <!-- targetPackage:包名称(自定义)  targetProject：项目路径(自定义)   -->
+        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 配置生成相应的接口类，对应与Mapper.xml中的一系列CRUD方法SQL语句 -->
+        <!-- targetPackage:包名称(自定义)  targetProject：项目路径(自定义)   -->
+        <javaClientGenerator targetPackage="com.lrj.myblogmybatis.dao" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名 mapperName是dao层名称-->
+        <table tableName="t_blog"
+               domainObjectName="Blog"
+               mapperName="BlogDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+            <!--数据库中字段是text类型时候，为了不生成BlogWithBloBs这样一个新的resultMap我们需要定义解析字段-->
+            <columnOverride column="content" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <columnOverride column="description" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        </table>
+        <table tableName="t_tag"
+               domainObjectName="Tag"
+               mapperName="TagDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="t_type"
+               domainObjectName="Type"
+               mapperName="TypeDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="t_user"
+               domainObjectName="User"
+               mapperName="UserDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="t_comment"
+               domainObjectName="Comment"
+               mapperName="CommentDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="t_blog_tags"
+               domainObjectName="BlogAndTag"
+               mapperName="BlogAndTagDao"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <!--value=true字段名和数据库列名相同，value=false则按驼峰命名（前提是数据库列名为下划线命名）-->
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+
+
+    </context>
+</generatorConfiguration>

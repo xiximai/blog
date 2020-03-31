@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lrj.myblogmybatis.dao.LikeDao">
+    <insert id="saveLike" parameterType="com.lrj.myblogmybatis.dto.LikeData">
+        insert t_like
+        (email , blog_id, user_id, nickname)
+        values
+        (#{email}, #{blogId}, #{userId}, #{nickname})
+    </insert>
+    <select id="getLikeByUserIdAndBlogId" parameterType="com.lrj.myblogmybatis.dto.LikeData" resultType="Integer">
+        select *
+        from t_like
+        where blog_id = #{blogId} and user_id = #{userId}
+    </select>
+    <delete id="deleteByUserIdAndBlogId" parameterType="com.lrj.myblogmybatis.dto.LikeData" >
+        delete
+        from t_like
+        where blog_id = #{blogId} and user_id = #{userId}
+    </delete>
+</mapper>

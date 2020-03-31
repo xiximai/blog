@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Java入门</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+</head>
+<body>
+
+    <!--遮罩层-->
+    <div id="tier">
+        <div class="flex">
+            <!--登录弹窗-->
+            <div class="loginform  m-padded-tb-massive  m-container" name="login-form" style="display: none;">
+                <div class="ui container m-padded-tb-massive" style="max-width: 30em !important;">
+                    <div class="ui middle aligned center aligned grid ">
+                        <div class="column">
+                            <h2 class="ui blue image header">
+                                <div class="content" style="color: purple">
+                                    用户登录
+                                </div>
+                            </h2>
+                            <form class="ui large form">
+                                <div class="ui stacked segment">
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text"  id="loginemail"  placeholder="邮箱">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="lock icon"></i>
+                                            <input type="password"  id="loginpassword"  placeholder="密码">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <button type="button" id="loginButton" class="ui fluid large purple button">登 录</button>
+                                        </div>
+                                        <div class="field">
+                                            <button id="loginundo" type="button" class="ui fluid large  blue button"><i class="undo icon"></i>取消</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui error mini  message"></div>
+                                <div class="ui mini negative message" id="loginMessage">输入邮箱和密码</div>
+
+                                <div class="ui message">
+                                    没有用户?
+                                    <a href="#" id="toregister">注册</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--注册弹窗-->
+            <div class="m-padded-tb-massive  m-container"   name="register-form" style="display: none;">
+                <div class="ui container m-padded-tb-massive" style="max-width: 30em !important;">
+                    <div class="ui middle aligned center aligned grid ">
+                        <div class="column" id="registerform">
+                            <h2 class="ui blue image header">
+                                <div class="content" style="color: purple">
+                                    你可以通过邮箱进行注册
+                                </div>
+                            </h2>
+                            <form class="ui large form ">
+                                <div class="ui stacked segment">
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="mail icon"></i>
+                                            <input type="text" id="e-mail" name="email"  placeholder="邮箱">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" id="nickname" name="nickname"  placeholder="用户名">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="lock icon"></i>
+                                            <input type="password" id="password" name="password"   placeholder="密码">
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <div class="ui left icon input">
+                                                <i class="key icon"></i>
+                                                <input type="text" id="code" name="code" placeholder="验证码">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <button id="getCode" type="button" class="ui black basic teal button code-button">发送激活码</button>
+                                        </div>
+                                    </div>
+                                    <div class="two fields">
+                                        <div class="field">
+                                            <button id="register" type="button" class="ui fluid large purple button">注册</button>
+                                        </div>
+                                        <div class="field">
+                                            <button id="registerundo" type="button" class="ui fluid large blue  button"><i class="undo icon"></i>取消</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui error mini message"></div>
+                                <div class="ui mini negative message" id="registerMessage">请输入邮箱号、用户名和密码</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <style>
+        #tier{
+            width: 100vw;
+            height: 100vw;
+            position: fixed;
+            background: rgba(0,0,0,.5);
+            z-index: 666;
+            display: none;
+        }
+        #tier .flex{
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+    <!-- 导航 -->
+    <nav th:replace="_fragments :: menu(1) " class="ui inverted attached segment m-padded-tb-mini m-shadow-small">
+         <div class="ui container">
+             <!--响应移动端，堆叠-->
+             <div class="ui inverted secondary stackable menu">
+                 <h2 class="ui teal header item">Blog</h2>
+                 <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+                 <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
+                 <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
+                 <a href="#" class="m-item item m-mobile-hide"><i class="clone icon"></i>归档</a>
+                 <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+                 <div class="right m-item item m-mobile-hide">
+                     <div class="ui icon inverted transparent input">
+                         <input type="text" placeholder="Search..." >
+                         <i class="search link icon"></i>
+                     </div>
+                 </div>
+             </div>
+         </div>
+        <a href="#" class="ui black menu toggle icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+
+    </nav>
+
+    <!-- 中间内容 -->
+    <div id="waypoint" class="m-container  m-padded-tb-big animated fadeInLeftBig" >
+        <div class="ui container">
+            <div class="ui top attached  segment">
+                <!--水平-->
+                <div class="ui  horizontal link list">
+                    <div class="item">
+                        <img src="../static/images/touxiang.jpg" th:src="${blog.avatar}" alt="" class="ui avatar image">
+                        <div class="content"><a href="#" class="blue header" th:text="${blog.nickname}">洗洗麦</a></div>
+                    </div>
+                    <div class="item">
+                        <i class="purple large calendar icon"></i>
+                        <span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}" style="color: purple">2020-1-30</span>
+                    </div>
+                    <div class="item">
+                        <i class="large green eye icon"></i>
+                        <span th:text="${blog.views}" style="color: green">200</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui attached segment">
+                <img src="../static/images/java.jpg" th:src="${blog.firstPicture}" alt="" class="ui fluid rounded image">
+            </div>
+            <div class="ui attached segment">
+                <div class="ui right aligned basic segment">
+                    <div class="ui blue basic label" th:text="${blog.flag}" >原创</div>
+                </div>
+                <h2 class="ui purple center aligned header" th:text="${blog.title}">Java的介绍</h2>
+                <div id="content " class="js-toc-content m-margin-lr m-padded-tb-huge typo typo-selection" th:utext="${blog.content}">
+
+
+
+                </div>
+                <!--标签-->
+                <div class="m-margin-lr">
+                    <div class="ui basic purple right pointing label" th:each="tag:${blog.tags}" th:text="${tag.name}">学习编程</div>
+                </div>
+                </br>
+                <div class="ui center aligned basic segment">
+                    <!--点赞-->
+                    <div class="ui mini labeled button" id="likeButton" tabindex="0">
+                        <div class="item">
+                            <div class="ui red basic button">
+                                <i class=" button-like" th:classappend="${like.isLike}? 'thumbs up icon' : 'thumbs up outline icon' "></i> 赞
+                            </div>
+                        </div>
+                        <a class="ui label-like basic red left pointing label" th:text="${like.likeTotal}">
+                            1,048
+                        </a>
+                    </div>
+                </div>
+
+                <!--赞赏-->
+                <div th:if="${blog.appreciation}">
+                    <div class="ui center aligned basic segment">
+                        <button id="payButton" class="ui orange basic circular button">赞赏</button>
+                    </div>
+                    <div class="ui payQR flowing popup transition hidden">
+                        <div class="ui orange basic label">
+                            <!--默认样式不提供加入字体-->
+                            <div class="ui images" style="font-size: inherit !important;">
+                                <div class="image">
+                                    <img src="https://allpassaway.oss-cn-shenzhen.aliyuncs.com/images/wc.jpg" alt="" class="ui rounded bordered image" style="width: 160px">
+                                    <div>微信</div>
+                                </div>
+                                <div class="image">
+                                    <img src="https://allpassaway.oss-cn-shenzhen.aliyuncs.com/images/zfb.jpg" alt="" class="ui rounded bordered image" style="width: 160px">
+                                    <div>支付宝</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="ui attached positive message">
+                <!--博客信息-->
+                <div class="ui middle aligned  grid">
+                    <div class="eleven wide column">
+                        <ui class="list">
+                            <li>作者：<span th:text="${blog.nickname}" style="color: blue">嘻嘻卖</span><a href="#" th:href="@{/about}" target="_blank">（联系作者）</a></li>
+                            <li>发表时间：<span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd HH:mm')}" style="color: blue">2017-10-02 09:08</span></li>
+                        </ui>
+                    </div>
+                    <!--二维码-->
+                    <div class="five wide column">
+                        <img src="https://allpassaway.oss-cn-shenzhen.aliyuncs.com/images/gz.jpg" alt="" class="ui right floated rounded bordered image" style="width: 130px">
+                    </div>
+                </div>
+            </div>
+            <!--留言区域-->
+            <div  th:if="${blog.commentabled}" class="ui bottom attached segment">
+                <div id="comment-container" class="ui teal basic segment">
+                    <div th:fragment="commentList" class="ui minimal comments">
+                            <h3 class="ui dividing header">评论</h3>
+                            <!--留言区域-->
+                            <div  class="comment">
+                                <div class="comment" th:each="comment : ${comments}">
+                                    <a class="avatar">
+                                        <img src="../images/avatar/small/elliot.jpg" th:src="@{${comment.avatar}}">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author">
+                                            <span th:text="${comment.nickname}">w</span>
+                                            <div class="ui mini basic purple left pointing label m-padded-mini" th:if="${comment.adminComment}">博主</div>
+                                        </a>
+                                        <div class="metadata">
+                                            <span class="date" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                                        </div>
+                                        <div class="text">
+                                            <p th:text="${comment.content}">This has been very useful for my research. Thanks as well!</p>
+                                        </div>
+                                        <div class="actions">
+                                            <a class="reply"  th:attr="data-commentid=${comment.id}, data-commentnickname=${comment.nickname}, data-commentparentid=${comment.parentCommentId}"  onclick="reply(this)">回复</a>
+                                        </div>
+                                    </div>
+                                    <div class="comments" th:if="${#arrays.length(comment.replyComments)}>0">
+                                        <div class="comment" th:each="reply : ${comment.replyComments}">
+                                            <a class="avatar">
+                                                <img src="../images/avatar/small/jenny.jpg" th:src="@{${reply.avatar}}">
+                                            </a>
+                                            <div class="content">
+                                                <a class="author">
+                                                    <span th:text="${reply.nickname}">w</span>
+                                                    <div class="ui mini basic purple left pointing label m-padded-mini" th:if="${reply.adminComment}">博主</div>
+                                                </a>
+                                                <div class="metadata">
+                                                    <span class="date" th:text="${#dates.format(reply.createTime,'yyyy-MM-dd HH:mm')}">Just now</span>
+                                                </div>
+                                                <div class="text">
+                                                    <p th:text="${reply.content}">Elliot you are always so right :)</p>
+                                                </div>
+                                                <div class="actions">
+                                                    <a class="reply" th:attr="data-commentid=${reply.id}, data-commentnickname=${reply.nickname}, data-commentparentid=${reply.parentCommentId}" onclick="reply(this)">回复</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <!--评论信息-->
+                <div class="ui form" id="comment-form">
+                    <input type="hidden" name="blogId" th:value="${blog.id}">
+                    <div class="field">
+                        <textarea name="content" id="publishedContent" cols="30" rows="10" placeholder="请输入评论信息"></textarea>
+                    </div>
+                    <div class="fields">
+                        <div class="field m-mobile-wide">
+                            <button id="published" type="button" class="ui teal button"><i class="edit icon"></i> 发布</button>
+                        </div>
+                        <div class="field m-mobile-wide">
+                            <button id="pageLogin" type="button" class="ui purple small basic button"><i class="user icon"></i>登录</button>
+                        </div>
+                    </div>
+                    <div style="color: #0C1021">
+                        <span style="color: gray" id="visitorname">登录才能评论</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <br>
+    <br>
+    <!--目录-->
+    <div id="toolbar" class="m-padded m-right-bottom m-fixed " style="display: none!important;">
+        <div class="ui vertical icon buttons">
+            <button  type="button" class="ui toc purple button">目录</button>
+            <a href="#comment-container" class="ui blue icon button">留言</a>
+            <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+            <div id="toTop-button" class="ui  icon button"><i class="chevron up icon"></i></div>
+        </div>
+    </div>
+    <div class="ui toc-container flowing popup transition hidden">
+        <div class="js-toc" style="width: 250px!important;"></div>
+    </div>
+
+    <div id="qrcode" class="ui wechat-qr flowing popup transition hidden m-padded" style="width: 150px">
+        <!--<img src="https://allpassaway.oss-cn-shenzhen.aliyuncs.com/images/gz.jpg" alt="" class="ui rounded image" style="width: 120px">-->
+    </div>
+    </div>
+
+
+
+    <!-- 底部footer-->
+    <footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                        <div class="item">
+                            <img src="../static/images/saoma.jpg" class="ui rounded image" alt="" style="width: 120px">
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header m-opacity-mini">最新博客</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">java</a>
+                        <a href="#" class="item">redis</a>
+                        <a href="#" class="item">mysql</a>
+                    </div>
+                </div>
+                <div class="four wide column">
+                    <h4 class="ui inverted header m-opacity-mini">联系我</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item">QQ:1147857572</a>
+                        <a href="#" class="item">E-mail:xiximai18566025953@163.com</a>
+
+                    </div>
+                </div>
+                <div class="six wide column">
+                    <h4 class="ui inverted header m-opacity-mini">最新博客</h4>
+                    <p class="m-text-thin m-text-spaced m-text-lined m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人帮助</p>
+                </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <p class="m-text-thin m-text-spaced m-text-lined m-opacity-mini">Copyright © 2019 - 2020  Designed by xiximai</p>
+        </div>
+    </footer>
+
+    <!--/*/<th:block th:replace="_fragments :: script">/*/-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <!--/*/</th:block>/*/-->
+    <script>
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('#payButton').popup({
+            popup : $('.payQR.popup'),
+            on : 'click',
+            position : 'bottom center'
+        });
+
+        /*生成目录-tocbot插件生成初始化*/
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '.js-toc',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: '.js-toc-content',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: 'h1, h2, h3',
+            // For headings inside relative or absolute positioned containers within content.
+            hasInnerContainers: true,
+        });
+
+        $('.toc.button').popup({
+            popup : $('.toc-container.popup'),
+            on : 'click',
+            position : 'left center'
+        });
+
+        $('.wechat').popup({
+            popup : $('.wechat-qr') ,
+            on : 'hover',
+            position : 'left center'
+
+        });
+        /*生成二维码*/
+        var qrcode = new QRCode("qrcode", {
+            text: "http://jindo.dev.naver.com/collie",
+            width: 110,
+            height: 110,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        /*平滑滚动条*/
+        $('#toTop-button').click(function () {
+            $(window).scrollTo(0,500);
+        });
+        /*滚动侦测*/
+        var waypoint = new Waypoint({
+            element: document.getElementById('waypoint'),
+            handler: function(direction) {
+                if( direction == 'down'){
+                    $('#toolbar').show(500);
+                }else {
+                    $('#toolbar').hide(500);
+                }
+                console.log('Scrolled to waypoint!' + direction)
+            }
+        });
+        //点赞数量
+        var likenumber=[[${like.likeTotal}]];
+
+        //获取session中visitor判断是否登录
+        //点赞按钮变化
+        $("#likeButton").click(function () {
+            var user = window.sessionStorage.getItem("userid");
+            if (user == null ){
+                loginShow();
+            }
+            else {
+                if ($(".button-like").hasClass("thumbs up outline icon")){
+                    like();
+                }else if($(".button-like").hasClass("thumbs up icon")) {
+                    dislike();
+                }
+            }
+        });
+
+        function like() {
+            $.ajax({
+                url: "/visitor/like",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(getLikeData()),
+                dataType: "json",
+                beforeSend: function (request) {
+                    token = window.sessionStorage.getItem("token");
+                    request.setRequestHeader("token",token);
+                },
+                success: function (response) {
+                    if (response.code == 201){
+                        $(".button-like").removeClass("thumbs up outline icon");
+                        $(".button-like").addClass("thumbs up icon");
+                    }
+                    else {
+                        $(".button-like").removeClass("thumbs up outline icon");
+                        $(".button-like").addClass("thumbs up icon");
+                        console.log(likenumber)
+                        likenumber=likenumber+1;
+                        $(".label-like").text(likenumber);
+                    }
+                },
+                error: function () {
+
+                }
+            })
+        }
+        function dislike() {
+            $.ajax({
+                url: "/visitor/dislike",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(getLikeData()),
+                dataType: "json",
+                beforeSend: function (request) {
+                    token = window.sessionStorage.getItem("token");
+                    request.setRequestHeader("token",token);
+                },
+                success: function () {
+                    $(".button-like").removeClass("thumbs up icon");
+                    $(".button-like").addClass("thumbs up outline icon");
+                    likenumber=likenumber-1;
+                    $(".label-like").text(likenumber);
+                },
+                error: function () {
+
+                }
+            })
+        };
+
+        function getLikeData() {
+            var userid = window.sessionStorage.getItem("userid");
+            var blogId = $("[name='blogId']").val();
+            var data = {
+                "userId": userid,
+                "blogId": blogId,
+            }
+            return data;
+        }
+
+
+        function loginShow(){
+            $("#tier").css({'display':'block'});
+            $("[name='login-form']").show();
+        }
+        function loginHide(){
+            $("[name='login-form']").hide();
+            $("#tier").css({'display':'none'});
+        }
+        //登录
+        $("#pageLogin").click(function () {
+            loginShow();
+        });
+        //取消登录
+        $("#loginundo").click(function () {
+            loginHide();
+        });
+        //跳转注册
+        $("#toregister").click(function () {
+            registerShow();
+        });
+        //注册页面
+        function registerShow() {
+            $("[name='register-form']").show();
+            $("[name='login-form']").hide();
+        }
+        //获取验证码
+        $("#getCode").click(function () {
+            var email=$("#e-mail").val();
+            if(email == null || email == ""){
+                alert("请输入邮箱");
+                return;
+            }
+            else {
+                //表单信息的验证
+                $.ajax({
+                    url: "/Toregister",
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify(getJsonData()),
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.code == 0){
+                            reformloaddata();  //信息正确发送验证码
+                            alert("验证码正在发送");
+                            var email = response.data.email;
+                            var nickname = response.data.nickname;
+                            var password = response.data.password;
+                            var code = response.data.code;
+                            /*console.log(email);
+                            console.log(nickname);
+                            console.log(password);*/
+
+                            $("#e-mail").text(email);
+                            $("#nickname").val(nickname);
+                            $("#password").val(password);
+                            $("#code").val(code);
+                            on();
+                            var timeout = window.setTimeout(out,60000);
+
+                        }
+                        else{
+                            var msg = response.msg;
+                            $("#registerMessage").text(msg);
+                            console.log(msg);
+                            /*alert(msg);*/
+                        }
+
+                    },
+                    error: function (message) {
+                        alert("注册信息错误");
+                        return;
+                    }
+
+                })
+            }
+        });
+        //按钮定期失效
+        function on() {
+            $('.code-button').removeClass('ui black  basic button');
+            $('.code-button').addClass('ui black disabled basic button')
+        }
+        function out() {
+            $('.code-button').removeClass('ui black disabled basic button');
+            $('.code-button').addClass('ui black  basic button')
+        }
+        //局部表单刷新
+        function reformloaddata(){
+            $.ajax({
+                url: "/code",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(getJsonData()),
+                dataType: "json",
+                success: function (response) {
+                    if(response.code == 0){
+                        $("#registerMessage").text("验证码已经发送到邮箱");
+                    }
+                    else{
+                        var msg = response.msg;
+                        $("#registerMessage").text(msg);
+                        console.log(msg);
+                        /*alert(msg);*/
+                    }
+                }
+            })
+        }
+        //获取表数据
+        function getJsonData() {
+            var email = $("#e-mail").val();
+            var nickname = $("#nickname").val();
+            var password = $("#password").val();
+            var code = $("#code").val();
+            var data = {
+                "email": email,
+                "nickname": nickname,
+                "password": password,
+                "code": code
+            }
+
+            return data;
+        }
+        //注册
+        $("#register").click(function () {
+            $.ajax({
+                url: "/register",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(getJsonData()),
+                dataType: "json",
+                success: function (response) {
+                    if (response.code == 0){
+                        $("[name='register-form']").hide();
+                        $("[name='login-form']").show();
+                        $("#loginMessage").text("注册成功！");
+                    }else {
+                        var msg = response.msg;
+                        $("#registerMessage").text(msg);
+                    }
+                },
+                error: function (response) {
+                    var msg = response.msg;
+                    alert(msg);
+                }
+            })
+        });
+        //登录
+        $("#pageLogin").click(function () {
+            loginShow();
+        });
+        //登录后的用户信息
+        if (window.sessionStorage.getItem("username")){
+            visituser = window.sessionStorage.getItem("username");
+            $("#visitorname").text(visituser+"已登录");
+        }
+        //登录
+        $("#loginButton").click(function () {
+            $.ajax({
+                url: "/VisitorLogin",
+                type: "post",
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(getLoginData()),
+                dataType: "json",
+                success: function (response,status,request) {
+                    if(response.code != 0){
+                        var msg = response.msg;
+                        console.log(msg);
+                        $("#loginMessage").text(msg);
+                    }else {
+                        var token = request.getResponseHeader("token");
+                        var username = response.data.nickname;
+                        var useremail = response.data.email;
+                        var userid = response.data.id;
+                        console.log(token);
+                        console.log(username)
+                        window.sessionStorage.setItem("token",token);
+                        window.sessionStorage.setItem("username",username);
+                        window.sessionStorage.setItem("useremail",useremail);
+                        window.sessionStorage.setItem("userid",userid);
+                        visituser = window.sessionStorage.getItem("username");
+                        loginHide();
+                        $("#visitorname").text(visituser+"已登录");
+                    }
+
+                },
+                error: function (response) {
+                    var msg = response.msg;
+                    console.log(msg);
+                }
+            })
+        });
+        //获取登录信息
+        function getLoginData(){
+            var email = $("#loginemail").val();
+            var password = $("#loginpassword").val();
+            var data={
+                "email": email,
+                "password": password,
+            }
+            return data;
+        }
+        //取消注册
+        $("#registerundo").click(function () {
+            $("[name='register-form']").hide();
+            $("#tier").css({'display':'none'});
+        });
+
+        //发布内容
+        $('.ui.form').form({
+            fields : {
+                content: {
+                    identifier : 'content' ,
+                    rules : [{
+                        type : 'empty' ,
+                        prompt : '内容不能为空'
+                    }]
+                }
+
+            }
+        });
+        //判断评论还是回复,默认false不是回复
+        var judge = false;
+        //评论
+        $("#published").click(function () {
+            if(judge){
+                var user = window.sessionStorage.getItem("username");
+                if (user == null){
+                    loginShow();
+                }
+                var content = $("#publishedContent").val();
+                if (content==null||content==""){
+                    $("#publishedContent").attr("placeholder","评论信息不能为空...");
+                }else {
+                    $.ajax({
+                        url: "/visitor/reply",
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify(getReplyData()),
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            token = window.sessionStorage.getItem("token");
+                            request.setRequestHeader("token",token);
+                        },
+                        success: function () {
+                            getComment();
+                        },
+                        error: function () {
+                            $("#publishedContent").attr("placeholder","评论信息错误...");
+                        }
+                    })
+                }
+            }else {
+                var user = window.sessionStorage.getItem("username");
+                if (user == null){
+                    loginShow();
+                }
+                var content = $("#publishedContent").val();
+                if (content==null||content==""){
+                    $("#publishedContent").attr("placeholder","评论信息不能为空...");
+                }else {
+                    $.ajax({
+                        url: "/visitor/comment",
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify(getPublishedData()),
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            token = window.sessionStorage.getItem("token");
+                            request.setRequestHeader("token",token);
+                        },
+                        success: function () {
+                            getComment();
+                        },
+                        error: function () {
+                            $("#publishedContent").attr("placeholder","评论信息错误...");
+                        }
+                    })
+                }
+            }
+
+        });
+        //评论
+        function getPublishedData() {
+            var content = $("#publishedContent").val();
+            var useremail = window.sessionStorage.getItem("useremail");
+            var username = window.sessionStorage.getItem("username");
+            var userid = window.sessionStorage.getItem("userid");
+            var blogId = $("[name='blogId']").val();
+            var data = {
+                "id": userid,
+                "content": content,
+                "useremail": useremail,
+                "username": username,
+                "blogId": blogId,
+            }
+            return data;
+        }
+        //回复
+        function getReplyData() {
+            var content = $("#publishedContent").val();
+            var useremail = window.sessionStorage.getItem("useremail");
+            var username = window.sessionStorage.getItem("username");
+            var userid = window.sessionStorage.getItem("userid");
+            var blogId = $("[name='blogId']").val();
+            if (parentid == 0){
+                var data = {
+                    "id": userid,
+                    "content": content,
+                    "useremail": useremail,
+                    "username": username,
+                    "blogId": blogId,
+                    "commentid": commentid,
+                    "commentnickname": commentnickname,
+                    "parentid": parentid,
+                }
+            }else {
+                var data = {
+                    "id": userid,
+                    "content": content,
+                    "useremail": useremail,
+                    "username": username,
+                    "blogId": blogId,
+                    "parentid": parentid,
+                    "commentnickname": commentnickname,
+                    "commentid": commentid,
+                }
+            }
+            return data;
+        }
+
+        function getComment() {
+            var blogId = $("[name='blogId']").val();
+            $("#comment-container").load("/comments",{
+                "id": blogId,
+            },
+            function () {
+                judge= false;
+               clear();
+            });
+
+        } ;
+
+        //评论表单验证
+        $('.ui.form').form({
+            fields: {
+                title: {
+                    identifier: 'publishedContent',
+                    rules: [{
+                        type: 'empty',
+                        prompt: '请输入评论内容'
+                    }
+                    ]
+                },
+            }
+        });
+
+        var parentid;
+        var commentid;
+        var commentnickname;
+        function reply(obj) {
+            commentnickname = $(obj).data('commentnickname');
+            parentid = $(obj).data('commentparentid');
+            if (parentid == 0){
+                commentid = $(obj).data('commentid');
+            }else {
+                commentid = $(obj).data('commentparentid');
+            }
+            $("#publishedContent").attr("placeholder", "@"+commentnickname).focus();
+            $(window).scrollTo($("#comment-form"),500);
+            judge = true;
+        }
+        function clear() {
+            $("#publishedContent").val('');
+            $("#publishedContent").attr("placeholder","请输入评论信息...");
+        }
+
+    </script>
+</body>
+</html>

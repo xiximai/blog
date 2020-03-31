@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lrj.myblogmybatis.dao.BlogDao">
+  <resultMap id="BaseResultMap" type="com.lrj.myblogmybatis.pojo.Blog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="first_picture" jdbcType="VARCHAR" property="firstPicture" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="views" jdbcType="INTEGER" property="views" />
+    <result column="appreciation" jdbcType="INTEGER" property="appreciation" />
+    <result column="share_statement" jdbcType="INTEGER" property="shareStatement" />
+    <result column="commentabled" jdbcType="INTEGER" property="commentabled" />
+    <result column="published" jdbcType="INTEGER" property="published" />
+    <result column="recommend" jdbcType="INTEGER" property="recommend" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="type_id" jdbcType="BIGINT" property="typeId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="tag_ids" jdbcType="VARCHAR" property="tagIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, content, first_picture, flag, views, appreciation, share_statement, commentabled, 
+    published, recommend, create_time, update_time, type_id, user_id, description, tag_ids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_blog
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_blog
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertBlog" parameterType="com.lrj.myblogmybatis.pojo.Blog">
+    insert into t_blog (id, title, content,
+      first_picture, flag, views, 
+      appreciation, share_statement, commentabled, 
+      published, recommend, create_time, 
+      update_time, type_id, user_id, 
+      description, tag_ids)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+      #{firstPicture,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, #{views,jdbcType=INTEGER}, 
+      #{appreciation,jdbcType=INTEGER}, #{shareStatement,jdbcType=INTEGER}, #{commentabled,jdbcType=INTEGER}, 
+      #{published,jdbcType=INTEGER}, #{recommend,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{typeId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{description,jdbcType=VARCHAR}, #{tagIds,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lrj.myblogmybatis.pojo.Blog">
+    insert into t_blog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="firstPicture != null">
+        first_picture,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="views != null">
+        views,
+      </if>
+      <if test="appreciation != null">
+        appreciation,
+      </if>
+      <if test="shareStatement != null">
+        share_statement,
+      </if>
+      <if test="commentabled != null">
+        commentabled,
+      </if>
+      <if test="published != null">
+        published,
+      </if>
+      <if test="recommend != null">
+        recommend,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="tagIds != null">
+        tag_ids,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPicture != null">
+        #{firstPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="views != null">
+        #{views,jdbcType=INTEGER},
+      </if>
+      <if test="appreciation != null">
+        #{appreciation,jdbcType=INTEGER},
+      </if>
+      <if test="shareStatement != null">
+        #{shareStatement,jdbcType=INTEGER},
+      </if>
+      <if test="commentabled != null">
+        #{commentabled,jdbcType=INTEGER},
+      </if>
+      <if test="published != null">
+        #{published,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null">
+        #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="tagIds != null">
+        #{tagIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lrj.myblogmybatis.pojo.Blog">
+    update t_blog
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPicture != null">
+        first_picture = #{firstPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="views != null">
+        views = #{views,jdbcType=INTEGER},
+      </if>
+      <if test="appreciation != null">
+        appreciation = #{appreciation,jdbcType=INTEGER},
+      </if>
+      <if test="shareStatement != null">
+        share_statement = #{shareStatement,jdbcType=INTEGER},
+      </if>
+      <if test="commentabled != null">
+        commentabled = #{commentabled,jdbcType=INTEGER},
+      </if>
+      <if test="published != null">
+        published = #{published,jdbcType=INTEGER},
+      </if>
+      <if test="recommend != null">
+        recommend = #{recommend,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="tagIds != null">
+        tag_ids = #{tagIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lrj.myblogmybatis.pojo.Blog">
+    update t_blog
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      first_picture = #{firstPicture,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      views = #{views,jdbcType=INTEGER},
+      appreciation = #{appreciation,jdbcType=INTEGER},
+      share_statement = #{shareStatement,jdbcType=INTEGER},
+      commentabled = #{commentabled,jdbcType=INTEGER},
+      published = #{published,jdbcType=INTEGER},
+      recommend = #{recommend,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      type_id = #{typeId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
+      tag_ids = #{tagIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="blog" type="com.lrj.myblogmybatis.dto.BlogQuery">
+    <id property="id" column="id"></id>
+    <result property="title" column="title"></result>
+    <result property="updateTime" column="update_time"></result>
+    <result property="recommend" column="recommend"></result>
+    <result property="typeId" column="type_id"></result>
+    <association property="type" javaType="com.lrj.myblogmybatis.pojo.Type">
+      <id property="id" column="id"></id>
+      <result property="name" column="name"></result>
+    </association>
+  </resultMap>
+
+  <select id="getAllBlogs" resultMap="blog">
+    select b.id , b.title, b.update_time, b.recommend, b.type_id, t.id tid, t.name
+    from t_blog b left join t_type t on
+    b.type_id = t.id order  by b.update_time desc
+  </select>
+
+  <select id="getBlogById" resultType="com.lrj.myblogmybatis.dto.ShowBlog">
+    select t.id, t.title, t.flag, t.published, t.content, t.type_id, t.tag_ids, t.first_picture, t.description,
+    t.recommend, t.share_statement, t.appreciation, t.commentabled, t.update_time
+    from t_blog t
+    where id = #{id}
+  </select>
+  
+  <update id="updateBlog" parameterType="com.lrj.myblogmybatis.dto.ShowBlog">
+    update t_blog
+    set published = #{published},flag = #{flag} ,
+        title = #{title}, content = #{content}, type_id = #{typeId}, tag_ids = #{tagIds},
+        first_picture = #{firstPicture} , description = #{description} , recommend = #{recommend} ,
+        share_statement = #{shareStatement}, appreciation = #{appreciation},
+        commentabled = #{commentabled} ,update_time = #{updateTime}
+        where id = #{id};
+  </update>
+
+  <select id="searchByTitleOrTypeOrRecommend" parameterType="com.lrj.myblogmybatis.dto.BlogSearch" resultMap="blog">
+    <bind name="pattern" value=" '%' + title + '%'"/>
+    select b.id, b.title, b.update_time, b.recommend, b.type_id, t.id, t.name
+    from t_blog b, t_type t
+    <where>
+      <if test="1 == 1">
+        b.type_id = t.id
+      </if>
+      <if test="typeId != null">
+        and b.type_id = #{typeId}
+      </if>
+      <if test="recommend != null">
+        and b.recommend = #{recommend}
+      </if>
+      <if test="title != null">
+        and b.title like #{pattern}
+      </if>
+    </where>
+  </select>
+
+  <!--首页博客-->
+  <resultMap id="homeBlog" type="com.lrj.myblogmybatis.dto.HomeBlog">
+    <id property="id" column="id"></id>
+    <result property="title" column="title"></result>
+    <result property="views" column="views"></result>
+    <result property="description" column="description"></result>
+    <result property="updateTime" column="update_time"></result>
+    <result property="firstPicture" column="first_picture"></result>
+
+    <result property="typeName" column="name"></result>
+
+    <result property="nickName" column="nickname"></result>
+    <result property="avatar" column="avatar"></result>
+  </resultMap>
+<!--首页博客-->
+  <select id="getHomeBlog" resultMap="homeBlog">
+    select b.id, b.title, b.views, b.description, b.update_time, b.first_picture, t.name, u.nickname, u.avatar
+    from t_blog b, t_type t, t_user u
+    where b.user_id = u.id and b.type_id = t.id
+    order  by b.update_time desc
+  </select>
+  <!--根据条件搜索-->
+  <select id="SearchBlogs" resultMap="homeBlog">
+    <bind name="pattern" value="'%' + query + '%'"></bind>
+    select b.id, b.title, b.views, b.description, b.update_time, b.first_picture, t.name, u.nickname, u.avatar
+    from t_blog b, t_type t, t_user u
+    where b.user_id = u.id and b.type_id = t.id and (b.title like #{pattern} or b.content like #{pattern})
+    order  by b.update_time desc
+  </select>
+
+  <!--热度榜-->
+  <select id="ShowRecommend" resultType="com.lrj.myblogmybatis.dto.RecommendBlog">
+    SELECT id, title, recommend,views
+    FROM  t_blog t1
+    WHERE 5>
+        (SELECT COUNT(DISTINCT t2.views)
+        from t_blog t2
+        WHERE t2.views > t1.views
+        )
+
+    ORDER BY views desc
+  </select>
+
+  <!--详情页-->
+  <resultMap id="DetailBlogs" type="com.lrj.myblogmybatis.dto.DetailBlog">
+    <id property="id" column="bid"></id>
+    <result property="title" column="title"></result>
+    <result property="content" column="content"></result>
+    <result property="firstPicture" column="first_picture"></result>
+    <result property="views" column="views"></result>
+    <result property="flag" column="flag"></result>
+    <result property="appreciation" column="appreciation"></result>
+    <result property="commentabled" column="commentabled"></result>
+    <result property="updateTime" column="update_time"></result>
+    <result property="description" column="description"></result>
+    <result property="nickname" column="nickname"></result>
+    <result property="avatar" column="avatar"></result>
+    <collection property="tags" ofType="com.lrj.myblogmybatis.pojo.Tag">
+      <id property="id" column="tid"></id>
+      <result property="name" column="name"></result>
+    </collection>
+  </resultMap>
+  
+  <select id="ShowBlogById" resultMap="DetailBlogs">
+    select b.id bid, b.title, b.content, b.first_picture, b.views, b.flag, b.appreciation, b.commentabled, b.update_time,
+    b.description, u.nickname, u.avatar, t.id tid, t.name
+    from t_blog b, t_tag t, t_user u, t_blog_tags tb
+    where b.user_id = u.id and b.id = tb.blog_id and t.id = tb.tag_id and b.id = #{id}
+  </select>
+
+  <!--查询博客-->
+  <select id="getById" resultType="com.lrj.myblogmybatis.pojo.Blog">
+    select *
+    from t_blog
+    where id = #{id}
+  </select>
+
+  <!--根据tag查询博客-->
+  <select id="getByTagId" resultMap="homeBlog">
+    select b.id, b.title, b.views, b.description, b.update_time, b.first_picture, t.name, u.nickname, u.avatar
+    from t_blog b, t_type t, t_user u, t_blog_tags tb, t_tag
+    where b.user_id = u.id and b.type_id = t.id and t_tag.id = tb.tag_id and  b.id = tb.blog_id and t_tag.id = #{id}
+    order  by b.update_time desc
+  </select>
+  <!--根据type 查询博客-->
+  <select id="getByTypeId" resultMap="homeBlog">
+    select b.id, b.title, b.views, b.description, b.update_time, b.first_picture, t.name, u.nickname, u.avatar
+    from t_blog b, t_type t, t_user u
+    where b.user_id = u.id and b.type_id = t.id and t.id = #{id}
+    order  by b.update_time desc
+  </select>
+
+  <!--文章归档-->
+  <resultMap id="ArchiveQuery" type="com.lrj.myblogmybatis.dto.ArchiveQuery">
+      <id property="id" column="id"></id>
+      <result property="title" column="title"></result>
+      <result property="createTime" column="create_time"></result>
+      <result property="flag" column="flag"></result>
+  </resultMap>
+  <select id="getArchiveBlog" resultMap="ArchiveQuery">
+    select * from
+	(select id, title, create_time, flag
+    from t_blog
+	) t
+	where year(t.create_time) = #{year}
+	order  by t.create_time desc
+  </select>
+  <select id="getYear" resultType="Integer">
+    select year(create_time) as year
+    from t_blog
+    group	by  year
+	ORDER BY year asc
+  </select>
+  <select id="BlogCount" resultType="Integer">
+    select count(*)
+    from t_blog
+  </select>
+</mapper>

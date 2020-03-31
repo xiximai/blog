@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lrj.myblogmybatis.dao.CommentDao">
+  <resultMap id="BaseResultMap" type="com.lrj.myblogmybatis.pojo.Comment">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="blog_id" jdbcType="BIGINT" property="blogId" />
+    <result column="visitor_id" jdbcType="BIGINT" property="visitorId"></result>
+    <result column="parent_comment_id" jdbcType="BIGINT" property="parentCommentId"></result>
+    <result column="admin_comment" jdbcType="TINYINT" property="adminComment"></result>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, nickname, email, content, avatar, create_time, blog_id, visitor_id, parent_comment_id, admin_comment
+  </sql>
+  <select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteComment" parameterType="java.lang.Long">
+    delete from t_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <!--评论-->
+  <insert id="saveComment" parameterType="com.lrj.myblogmybatis.pojo.Comment">
+    insert into t_comment (id, nickname, email, 
+      content, avatar, create_time, 
+      blog_id, visitor_id,parent_comment_id, admin_comment)
+    values (#{id,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{blogId,jdbcType=BIGINT}, #{visitorId,jdbcType=BIGINT}, #{parentCommentId,jdbcType=BIGINT},
+      #{adminComment,jdbcType=TINYINT})
+  </insert>
+  <!--查询所属博客的评论-->
+  <select id="getCommentsByBlogId" resultMap="BaseResultMap">
+    select *
+    from t_comment
+    where blog_id = #{id}
+    order by create_time desc
+  </select>
+  <resultMap id="ChildComment" type="com.lrj.myblogmybatis.pojo.Ccomment">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="blog_id" jdbcType="BIGINT" property="blogId" />
+    <result column="visitor_id" jdbcType="BIGINT" property="visitorId"></result>
+    <result column="parent_comment_id" jdbcType="BIGINT" property="parentCommentId"></result>
+    <result column="admin_comment" jdbcType="TINYINT" property="adminComment"></result>
+  </resultMap>
+  <!--查询子评论-->
+  <select id="getChildComment" resultMap="ChildComment">
+    select cc.*
+    from t_ccomment cc, t_comment c
+    where cc.parent_comment_id = c.id and c.id = #{id}
+    order by cc.create_time desc
+  </select>
+  <insert id="insertSelective" parameterType="com.lrj.myblogmybatis.pojo.Comment">
+    insert into t_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="blogId != null">
+        blog_id,
+      </if>
+      <if test="visitorId != null">
+        visitor_id ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogId != null">
+        #{blogId,jdbcType=BIGINT},
+      </if>
+      <if test="visitorId != null">
+        #{visitorId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lrj.myblogmybatis.pojo.Comment">
+    update t_comment
+    <set>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="blogId != null">
+        blog_id = #{blogId,jdbcType=BIGINT},
+      </if>
+      <if test="visitorId != null">
+        visitor_id = #{visitorId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lrj.myblogmybatis.pojo.Comment">
+    update t_comment
+    set nickname = #{nickname,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      blog_id = #{blogId,jdbcType=BIGINT},
+      visitor_id = #{visitorId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!--子评论-->
+  <insert id="saveCcomment" parameterType="com.lrj.myblogmybatis.pojo.Ccomment">
+    insert into t_ccomment (id, nickname, email,
+      content, avatar, create_time,
+      blog_id, visitor_id,parent_comment_id, admin_comment)
+    values (#{id,jdbcType=BIGINT}, #{nickname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{content,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{blogId,jdbcType=BIGINT}, #{visitorId,jdbcType=BIGINT}, #{parentCommentId,jdbcType=BIGINT},
+      #{adminComment,jdbcType=TINYINT})
+  </insert>
+</mapper>

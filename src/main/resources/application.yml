@@ -1,0 +1,97 @@
+spring:
+  thymeleaf:
+    mode: HTML5
+    cache: false
+    encoding: utf-8
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+    #保存的日期格式
+  mvc:
+    date-format: yyyy-MM-dd
+    #数据源基本配置
+  datasource:
+    username: ENC(THIJVt+g6oMnC6HNjNa1XQ==)
+    password: ENC(CBFsiIkjK5W1moUJXAVuuA==)
+    url: ENC(MPUBDXzmADqjGGgNDL7u9M5USvuVgXw7SiTq6/2EIIqWm/1kH5QClSc/91rP2iAeppDrkFyu7171kkPyLrKELUFpF109X/P5+dlkO2cTPZHTP+zEQXPuObM9vXLZiEWmD1qQV7mrj4NQTZmg5PDr31zD7D7VpizZ)
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #数据源其他配置
+    # 初始化大小，最小，最大
+    initiSize: 5
+    miniIdle: 5
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall，log4j
+    # 合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  ##qq邮箱配置
+  mail:
+    host: smtp.qq.com #发送邮件服务器
+    username: 1147857572@qq.com #发送邮件的邮箱地址
+    password: tsesxhgqqtzrihdg #客户端授权码，不是邮箱密码，在qq邮箱中设置中发送短信获取授权码 #端口号465或者687
+    default-encoding: UTF-8
+    protocol: smtp #发送邮件协议
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+#jedis
+  redis:
+    #数据库信息
+    database: 0
+    host: allpassaway.top
+    port: 6379
+    password: redis123
+    jedis:
+      pool:
+        #连接池最大连接数（使用负值表视没有限制）
+        max-active: 8
+        #连接池最大阻塞等待时间（使用负值表视没有限制）
+        max-wait: -1
+        #连接池中的最大空闲连接
+        max-idle: 5
+        #连接池中的最小空闲连接
+        min-idle: 0
+    #连接超时时间（毫秒）
+    timeout: 10000
+
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.lrj.myblogmybatis.pojo
+  configuration:
+      map-underscore-to-camel-case: true
+
+#分页
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+#jasypt加密的密匙
+jasypt:
+  encryptor:
+    password: EbfYkitulv73I2p0mXI50JMXoaxZTKJ7
+
+comment.avatar: https://allpassaway.oss-cn-shenzhen.aliyuncs.com/images/tx

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lrj.myblogmybatis.dao.VisitorDao">
+    <insert id="saveVisitor" parameterType="com.lrj.myblogmybatis.pojo.Visitor">
+        insert into t_visitor(email,nickname,password,avatar)
+        values (#{email},#{nickname},#{password},#{avatar})
+    </insert>
+    <select id="getUserByUseremail" resultType="com.lrj.myblogmybatis.pojo.Visitor">
+        select *
+        from t_visitor
+        where email = #{email}
+    </select>
+
+    <select id="getUserByUserId" resultType="com.lrj.myblogmybatis.pojo.Visitor">
+        select *
+        from t_visitor
+        where id = #{id}
+    </select>
+
+    <select id="getAvatar"  parameterType="Long" resultType="String">
+        select avatar
+        from t_visitor
+        where id = #{id}
+    </select>
+</mapper>

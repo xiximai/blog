@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lrj.myblogmybatis.dao.TagDao">
+  <resultMap id="BaseResultMap" type="com.lrj.myblogmybatis.pojo.Tag">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tag
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="getByName" resultMap="BaseResultMap">
+    select * from t_tag
+    where name = #{name}
+  </select>
+  <resultMap id="tags" type="com.lrj.myblogmybatis.pojo.Tag">
+    <id property="id" column="tid"></id>
+    <result property="name" column="name"></result>
+    <collection property="blogs" ofType="com.lrj.myblogmybatis.pojo.Blog">
+      <id property="id" column="bid"></id>
+      <result property="title" column="title"></result>
+    </collection>
+  </resultMap>
+
+  <select id="getAllTags" resultMap="tags">
+    select t.id tid,t.name,b.id bid,b.title from t_blog b, t_tag t,t_blog_tags bt
+    where t.id = bt.tag_id and b.id = bt.blog_id
+  </select>
+  <select id="getAdminTag" resultMap="BaseResultMap">
+    select * from t_tag
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_tag
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.lrj.myblogmybatis.pojo.Tag">
+    insert into t_tag (id, name)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lrj.myblogmybatis.pojo.Tag">
+    insert into t_tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.lrj.myblogmybatis.pojo.Tag">
+    update t_tag
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lrj.myblogmybatis.pojo.Tag">
+    update t_tag
+    set name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

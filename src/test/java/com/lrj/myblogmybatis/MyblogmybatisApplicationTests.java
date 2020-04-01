@@ -33,7 +33,7 @@ class MyblogmybatisApplicationTests {
 
     @Test
     void contextLoads() {
-        String url = encryptor.encrypt("jdbc:mysql://allpassaway.top:3306/mybatisblog?useUnicode=true&serverTimezone=UTC&characterEncoding=utf-8");
+        String url = encryptor.encrypt("jdbc:mysql://:3306/mybatisblog?useUnicode=true&serverTimezone=UTC&characterEncoding=utf-8");
         /*String name = encryptor.encrypt("root");
         String password = encryptor.encrypt("888888");*/
         System.out.println(url);

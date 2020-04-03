@@ -44,8 +44,8 @@ spring:
   ##qq邮箱配置
   mail:
     host: smtp.qq.com #发送邮件服务器
-    username:  #发送邮件的邮箱地址
-    password:  #客户端授权码，不是邮箱密码，在qq邮箱中设置中发送短信获取授权码 #端口号465或者687
+    username: 1147857572@qq.com #发送邮件的邮箱地址
+    password: tsesxhgqqtzrihdg #客户端授权码，不是邮箱密码，在qq邮箱中设置中发送短信获取授权码 #端口号465或者687
     default-encoding: UTF-8
     protocol: smtp #发送邮件协议
     properties:
@@ -62,7 +62,7 @@ spring:
     database: 0
     host:
     port: 6379
-    password: redis123
+    password:
     jedis:
       pool:
         #连接池最大连接数（使用负值表视没有限制）
